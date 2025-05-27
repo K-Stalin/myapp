@@ -55,10 +55,10 @@ class DataProvider extends ChangeNotifier {
     return _clientID;
   }
 
-  clientLoginAPI(data) async {
+  clientLoginAPI(data, url) async {
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.2.34:29091/clientLogin"),
+        Uri.parse("http://192.168.2.34:29091/${url}Login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -66,10 +66,11 @@ class DataProvider extends ChangeNotifier {
       );
 
       var dataSet = json.decode(response.body);
-      if (dataSet["flag"]) {
-        _dataSet = [dataSet];
-        notifyListeners();
-        
+
+      print(dataSet);
+
+      if (dataSet["status"] == "S") {
+        return dataSet;
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
@@ -78,8 +79,58 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  getClientProfile()
+
+  adminLoginAPI(data) async
   {
+    //   try {
+    //   final response = await http.post(
+    //     Uri.parse("http://192.168.2.34:29091/${url}Login"),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //     body: jsonEncode(data),
+    //   );
+
+    //   var dataSet = json.decode(response.body);
+
+    //   print(dataSet);
+
+    //   if (dataSet["status"] == "S") {
+    //     return dataSet;
+    //   } else {
+    //     throw Exception('Failed to load data: ${response.statusCode}');
+    //   }
+    // } catch (e) {
+    //   throw Exception('Failed to fetch data: $e');
+    // }
+  }
+
+
+  getClientProfile() {
     return _dataSet;
+  }
+
+  // Admin API Start
+
+  addBank(data) async {
+    try {
+      final response = await http.post(
+        Uri.parse("http://192.168.2.34:29091/insertBank"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data),
+      );
+
+      var dataset = json.decode(response.body);
+      if (dataset["status"] == "S") {
+        return true;
+      } else
+        return false;
+
+      return dataset;
+    } catch (e) {
+      print("ErrorName:::::::::::::: $e");
+    }
   }
 }

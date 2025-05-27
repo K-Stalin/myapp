@@ -16,7 +16,10 @@ class _HomePageState extends State<HomePage> {
 
     print(dataSet);
     return Scaffold(
-      
+         
+         appBar: AppBar(
+            title:Text("Wel"),
+         ),
         
         drawer: Drawer(
             child: Column(

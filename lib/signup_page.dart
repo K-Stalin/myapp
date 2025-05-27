@@ -45,7 +45,8 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  String? validateRequired(String? value, String fieldName) {
+  String? validateRequired(String? value, String fieldName) 
+  {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
@@ -92,6 +93,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      
       body: Form(
         key: _formKey,
         child: Container(

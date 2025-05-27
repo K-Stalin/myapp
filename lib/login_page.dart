@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/admin/admin_homePage.dart';
 import 'package:myapp/client/home_page.dart';
 import 'package:myapp/data_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var checkIn = context.watch<DataProvider>().getClientProfile();
+    // var checkIn = context.watch<DataProvider>().getClientProfile();
 
     return Scaffold(
       appBar: AppBar(),
@@ -77,24 +78,60 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
 
-                child: TextButton(
+                child:
+                
+                 TextButton(
                   onPressed: () {
-                    setState(() {
-                      if (_formKey.currentState!.validate()) {
-                         context.read<DataProvider>().clientLoginAPI({
-                          "client_id": loginId.text,
-                          "password": loginPassword.text,
-                        });
+                    setState(() async {
+                      if (_formKey.currentState!.validate()) 
+                      {
+                        String check = "${loginId.text[0]}${loginId.text[1]}";
+                        print(check);
 
-                        if (checkIn == null) 
-                        {
-                          wPassOrID = true;
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        }
+                     if(check == "AD")
+                     {
+                        if(context.read<DataProvider>().clientLoginAPI({
+                              client_id:"",
+                        }, "client"))   
+
+
+                     }
+                     else if(check=="BO")
+                     {
+
+                     }
+                     else if(check == "BI")
+                     {
+
+                     }
+                     else 
+                     {
+
+                     }
+
+
+                        // var dataset = await context
+                        //     .read<DataProvider>()
+                        //     .clientLoginAPI({
+                        //       "client_id": loginId.text,
+                        //       "password": loginPassword.text,
+                        //     },"admin");
+
+                        // if(dataset.length >0)
+                        //  {
+
+                        //  }
+
+                        //     {
+                        //   //  dataSet["resp"]["client_id"]
+                        // }
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => AdminHomepage(),
+                        //   ),
+                        //   // MaterialPageRoute(builder: (context) => HomePage()),
+                        // );
                       }
                     });
                   },
