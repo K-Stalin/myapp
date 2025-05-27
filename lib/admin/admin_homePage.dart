@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:myapp/admin/add_bankPage.dart';
 import 'package:myapp/admin/add_employeePage.dart';
 import 'package:myapp/admin/add_stocksPage.dart';
-import 'package:myapp/admin/client_approvePage.dart';
+import 'package:myapp/admin/pending_approvalPage.dart';
+import 'package:myapp/data_provider.dart';
+import 'package:provider/provider.dart';
 
 class AdminHomepage extends StatefulWidget {
   const AdminHomepage({super.key});
@@ -12,8 +14,14 @@ class AdminHomepage extends StatefulWidget {
 }
 
 class _AdminHomepageState extends State<AdminHomepage> {
+
+
   @override
   Widget build(BuildContext context) {
+    
+  var adminProfile = context.watch<DataProvider>().adminSideLoginProfile();
+
+
     return Scaffold(
       appBar: AppBar(title: Text("Welcome to Admin Page")),
 
@@ -29,11 +37,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ClientApprovepage(),
+                      builder: (context) => PendingApprovalpage(),
                     ),
                   );
                 },
-                child: Text("Client Approve"),
+                child: Text("Pending Approvals"),
               ),
             ),
 

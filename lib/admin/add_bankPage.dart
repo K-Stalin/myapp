@@ -7,7 +7,10 @@ class AddBankpage extends StatefulWidget {
 
   @override
   State<AddBankpage> createState() => _AddBankpageState();
-}
+}  
+
+ 
+ 
 
 class _AddBankpageState extends State<AddBankpage> {
   final _formKey = GlobalKey<FormState>();
