@@ -63,7 +63,7 @@ class _OrderPageState extends State<OrderPage>
   child: ListView.builder(
     itemCount: dataSet.length,
     itemBuilder: (context, index) {
-      String tradeType = dataSet[index]["trade_type"] ?? ""; // e.g. "BUY" or "SELL"
+      String tradeType = dataSet[index]["trade_type"] ?? ""; 
       Color tradeColor = tradeType.toUpperCase() == "SELL" ? Colors.red : Colors.green;
 
 
@@ -85,7 +85,9 @@ class _OrderPageState extends State<OrderPage>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(getStocks[0]["resp"][index]["stock_name"] ??  "Stock"),
+             Text(
+              getStocks[0]["resp"].firstWhere((element)=>element["stock_id"]==dataSet[index]["stock_id"] ,orElse:()=>{"stock_name":"unknown"},)["stock_name"]
+),
                 Row(
                    children: [
                                   Icon(
