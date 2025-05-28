@@ -16,8 +16,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController loginId = TextEditingController();
-  TextEditingController loginPassword = TextEditingController();
+  TextEditingController loginId = TextEditingController(text: "FT00083");
+  TextEditingController loginPassword = TextEditingController(
+    text: "SURYA@123",
+  );
+
   bool wPassOrID = false;
 
   validateRequired(String? value, String fieldName) {
@@ -27,10 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     // var checkIn = context.watch<DataProvider>().getClientProfile();
 
     return Scaffold(
@@ -82,130 +83,164 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
 
-                child:
-                 TextButton(
+                child: TextButton(
                   onPressed: () {
                     setState(() async {
-                      if(_formKey.currentState!.validate()) 
-                      {
+                      if (_formKey.currentState!.validate()) {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.clear();
                         String check = "${loginId.text[0]}${loginId.text[1]}";
 
+                        switch (check) 
+                        {
+                          case "FT":
+                            {
+                              bool isLogIN = await context
+                                  .read<DataProvider>()
+                                  .clientLoginAPI({
+                                    "client_id": loginId.text,
+                                    "password": loginPassword.text,
+                                  });
 
-                     if(check == "FT")
-                     {
-                        bool  isLogIN=await context.read<DataProvider>().clientLoginAPI({"client_id":loginId.text, "password":loginPassword.text});
-   
+                              if (isLogIN) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ClientHomePage(),
+                                  ),
+                                );
+                              } else if (!isLogIN) {
+                                setState(() {
+                                  wPassOrID = true;
+                                });
+                              }
+                              break;
+                            }
+                          case "BO":
+                            {
+                              await prefs.setString('user', 'BackOfficer');
+                              var role = await prefs.getString('user');
+                              bool isLogIN = await context
+                                  .read<DataProvider>()
+                                  .adminLoginAPI({
+                                    "user_name": loginId.text,
+                                    "password": loginPassword.text,
+                                    "user": role,
+                                  });
 
-                          if(isLogIN)
-                          { 
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ClientHomePage()
-                          ));
-                          }
-                          else
-                          {
-                             wPassOrID= true;
-                              
-                          }
-                      
+                              if (isLogIN) {
+                                await context
+                                    .read<DataProvider>()
+                                    .getTradeApproval(role);
 
-                     }
-                     else if(check=="BO")
-                     {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserHomepage(),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  wPassOrID = true;
+                                });
+                              }
+                              break;
+                            }
+                          case "BI":
+                            {
+                              await prefs.setString('user', 'Biller');
+                              var role = await prefs.getString('user');
+                              var isLogIN = await context
+                                  .read<DataProvider>()
+                                  .adminLoginAPI({
+                                    "user_name": loginId.text,
+                                    "password": loginPassword.text,
+                                    "user": role,
+                                  });
 
-    //  SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString('user', '');
+                              if (isLogIN) {
+                                await context
+                                    .read<DataProvider>()
+                                    .getTradeApproval(role);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserHomepage(),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  wPassOrID = true;
+                                });
+                              }
 
-var role = "BackOfficer";
-              bool isLogIN =await context.read<DataProvider>().adminLoginAPI({
-               "user_name":loginId.text,
-               "password": loginPassword.text,
-               "user":role
-});
+                              break;
+                            }
+                          case "AD":
+                            {
+                              bool isLogIN = await context
+                                  .read<DataProvider>()
+                                  .adminLoginAPI({
+                                    "user_name": loginId.text,
+                                    "password": loginPassword.text,
+                                    "user": "Admin",
+                                  });
 
-                          if(isLogIN)
-                          { 
+                              if (isLogIN) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminHomepage(),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  wPassOrID = true;
+                                });
+                              }
+                              break;
+                            }
+                          case "AP":
+                            {
+                              await prefs.setString('user', 'Approver');
+                              var role = await prefs.getString('user');
+                              var isLogIN = await context
+                                  .read<DataProvider>()
+                                  .adminLoginAPI({
+                                    "user_name": loginId.text,
+                                    "password": loginPassword.text,
+                                    "user": role,
+                                  });
 
-                            
-                await context.read<DataProvider>().getTradeApproval(role);
+                              if (isLogIN) {
+                                await context
+                                    .read<DataProvider>()
+                                    .getTradeApproval(role);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserHomepage(),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  wPassOrID = true;
+                                });
+                              }
+                              break;
+                            }
+                          default:
+                            {
+                              setState(() 
+                              {
+                                wPassOrID = true;
+                              });
+                            }
+                        }
 
-    
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:(context) => UserHomepage()
-                          ));
-                          }
-                          else
-                          {
-                             wPassOrID= true;
-                              
-                          }
-                     }
-                     
-                     else if(check == "BI")
-                     {
-                      var isLogIN =await context.read<DataProvider>().adminLoginAPI({"user_name":loginId.text, "password":loginPassword.text,"user":"Biller"});
-
- 
-  
-                          if(isLogIN)
-                          { 
-                             print("Hello");
-                          }
-                          else
-                          {
-                             wPassOrID= true;
-                              
-                          }
-  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdminHomepage()
-                          ));
-                     }
-                     else if(check == "AD")
-                     {
-                     bool isLogIN =await context.read<DataProvider>().adminLoginAPI({"user_name":loginId.text, "password":loginPassword.text,"user":"Admin"});
-
-                         print(isLogIN);
-                          if(isLogIN)
-                          { 
-                               Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AdminHomepage()
-                          ));
-                          }
-                          else
-                          {
-                             wPassOrID= true;
-                              
-                          }
-
-                     }
-                     else if(check == "AP")
-                     {
-
-                      var isLogIN =await context.read<DataProvider>().adminLoginAPI({"user_name":loginId.text, "password":loginPassword.text,"user":"Approver"});
-
-                          if(isLogIN)
-                          { 
-                             print("Hello") ;
-                          }
-                          else
-                          {
-                             wPassOrID= true;
-                              
-                          }
-
-                     }
-                     else
-                     {
-                         wPassOrID= true;
-                     }
+                        loginId.clear();
+                        loginPassword.clear();
                       }
                     });
                   },

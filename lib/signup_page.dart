@@ -11,6 +11,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController firstName = TextEditingController();
@@ -203,17 +204,20 @@ class _SignupPageState extends State<SignupPage> {
                               value: bank['bank_id'].toString(),
                               child: Text(bank['bank_name']),
                             );
-                          })?.toList(),
+                          }).toList(),
                       validator:
                           (value) => value == null ? 'Bank is required' : null,
                       onChanged: (String? newValue) {
-                        setState(() {
+                        setState(() 
+                        {
                           selectedBankId = newValue;
                           for (int i = 0; i < bankData.length; i++) 
                           {
                             if (bankData[i]["bank_id"].toString() ==
-                                selectedBankId.toString()) {
+                                selectedBankId.toString()) 
+                            {
                               selectedIFSCcode = bankData[i]["ifsc_code"];
+                              print(selectedIFSCcode);
                             }
                           }
 
@@ -242,22 +246,35 @@ class _SignupPageState extends State<SignupPage> {
 
                   // IFSC Code
                   if (isToggelIFSC)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Bank IFSC Code"),
-                        TextFormField(
-                          readOnly: true,
-                          initialValue: selectedIFSCcode,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                      ],
-                    ),
+                  Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Text("Bank IFSC Code"),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+      children: [
+        Expanded(
+          child: TextFormField(
+            readOnly: true,
+            initialValue: selectedIFSCcode,
+          ),
+        ),
+        SizedBox(width: 8), 
+        CircleAvatar(
+          radius: 16, 
+          backgroundColor: Colors.green,
+          child: Icon(
+            Icons.check,
+            color: Colors.white,
+            size: 16, // Adjust size of the check icon
+          ),
+        ),
+      ],
+    ),
+    SizedBox(height: 10),
+  ],
+),
+
 
                   // Password
                   Text("Password *"),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data_provider.dart';
-import 'package:myapp/login_page.dart';
 import 'package:provider/provider.dart';
 
 class ShownPage extends StatefulWidget {
@@ -48,10 +47,12 @@ class _ShownPageState extends State<ShownPage> {
 
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
+                  
+                  setState(() {
+                    
+                     Navigator.pop(context);
+                     Navigator.pop(context);
+                  });
                 },
                 child: Center(
                   child: Text(

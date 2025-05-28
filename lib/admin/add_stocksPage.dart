@@ -30,7 +30,7 @@ class _AddStockspageState extends State<AddStockspage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Bank")),
+      appBar: AppBar(title: Text("Add Stock")),
 
       body: Form(
         key: _formKey,
@@ -45,7 +45,7 @@ class _AddStockspageState extends State<AddStockspage> {
                 controller: stockName,
                 validator: (value) => validateRequired(value, 'Stock Name'),
                 decoration: InputDecoration(
-                  hintText: "Canara Bank",
+                  hintText: "e.g Slack",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -59,7 +59,7 @@ class _AddStockspageState extends State<AddStockspage> {
                 controller: stockPrice,
                 validator: (value) => validateRequired(value, 'Stock  Price'),
                 decoration: InputDecoration(
-                  hintText: "Rajamadam",
+                  hintText: "e.g 1000",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -73,7 +73,7 @@ class _AddStockspageState extends State<AddStockspage> {
                 controller: segment,
                 validator: (value) => validateRequired(value, 'segment'),
                 decoration: InputDecoration(
-                  hintText: "e.g. CNRB0005023",
+                  hintText: "e.g. NSE",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -87,7 +87,7 @@ class _AddStockspageState extends State<AddStockspage> {
                 controller: isin,
                 validator: (value) => validateRequired(value, 'isin'),
                 decoration: InputDecoration(
-                  hintText: "Adress",
+                  hintText: "",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),

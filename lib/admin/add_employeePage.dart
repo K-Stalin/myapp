@@ -31,7 +31,7 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Bank")),
+      appBar: AppBar(title: Text("Add EMployee")),
 
       body: Form(
         key: _formKey,
@@ -44,9 +44,9 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
               Text("User Name *"),
               TextFormField(
                 controller: userName,
-                validator: (value) => validateRequired(value, 'Stock Name'),
+                validator: (value) => validateRequired(value, 'User Name'),
                 decoration: InputDecoration(
-                  hintText: "Canara Bank",
+                  hintText: "e.g. Robert",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -58,9 +58,9 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
               Text("Password *"),
               TextFormField(
                 controller: password,
-                validator: (value) => validateRequired(value, 'Stock  Price'),
+                validator: (value) => validateRequired(value, 'Password'),
                 decoration: InputDecoration(
-                  hintText: "Rajamadam",
+                  hintText: "",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -74,7 +74,7 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
                 controller: role,
                 validator: (value) => validateRequired(value, 'role'),
                 decoration: InputDecoration(
-                  hintText: "e.g. CNRB0005023",
+                  hintText: "",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -88,7 +88,7 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
                 controller: status,
                 validator: (value) => validateRequired(value, 'status'),
                 decoration: InputDecoration(
-                  hintText: "Adress",
+                  hintText: "",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),

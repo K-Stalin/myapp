@@ -85,7 +85,7 @@ class _AddBankpageState extends State<AddBankpage> {
                 controller: address,
                 validator: (value) => validateRequired(value, 'Address'),
                 decoration: InputDecoration(
-                  hintText: "Adress",
+                  hintText: "Lenin Street",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),

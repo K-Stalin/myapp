@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data_provider.dart';
-import 'package:myapp/login_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserHomepage extends StatefulWidget {
   const UserHomepage({super.key});
@@ -10,238 +10,170 @@ class UserHomepage extends StatefulWidget {
   State<UserHomepage> createState() => _UserHomepageState();
 }
 
-
-  
-
 class _UserHomepageState extends State<UserHomepage> {
- 
- 
-  List data = []; // Strongly typed list
+  List data = []; 
+  String? userRole;
 
-
-@override
-void initState() {
-  super.initState();
-  loadClientData();
-}
-
- loadClientData() async {
-
-  try {
-
-    final dataSet = await context.read<DataProvider>().sendDataUser();
-      
-
-    setState(() {
-      data=dataSet;
-
-    });
-   
-  } catch (e) {
-   
-   print("Erro::::::::::::::::::$e");
+  @override
+  void initState() {
+    super.initState();
+    loadClientData();
+    loadRole();
   }
-}
- 
- 
- 
+
+  loadClientData() async {
+    try {
+      final dataSet = await context.read<DataProvider>().sendDataUser();
+      setState(() {
+        data = dataSet;
+      });
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  void loadRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userRole = prefs.getString('user') ?? 'Unknown';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
- 
     return Scaffold(
-        appBar:AppBar(
-          title:Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(
-                padding: EdgeInsets.all(10),
-                child: Text("Role:BackOfficer")),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: TextButton(
-                onPressed:()
-                {
-                
-                setState(() 
-                {
-                  
-                Navigator.pop(context);
-                Navigator.pop(context);
-                });
-                
-                
-                }, child: Text("Logout")),
-              )
-             ],
-          ),
-        ),
-   
-
-
-        body: Container(
-            margin: EdgeInsets.all(8),
-             child: Column(
-  children: [
-    // Header Row
-    Row(
-      children: [
-        Expanded(
-          flex: 2, // Adjust flex values as needed
-          child: Text("Client ID",style: TextStyle(fontWeight: FontWeight.bold),),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text("BackOfficer",style: TextStyle(fontWeight: FontWeight.bold),),
-        ),
-        // Expanded(
-        //   flex: 2,
-        //   child: Text("Biller",style: TextStyle(fontWeight: FontWeight.bold),),
-        // ),
-        // Expanded(
-        //   flex: 2,
-        //   child: Text("Approver",style: TextStyle(fontWeight: FontWeight.bold),),
-        // ),
-      ],
-    ),
-    
-    SizedBox(height: 8), // Add some spacing
-    
-  
-
-   
-Expanded(
-  child: ListView.builder(
-    itemCount:data.length,
-    itemBuilder:(BuildContext item,int index){
-  
-    print(data[index]["approver"]);
-        return     Container(
-        margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
-        child: Row(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              flex: 2,
-              child: Text("${data[index]["client_id"]}"),
+            Text(
+              "${userRole ?? ''}",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                 padding: EdgeInsets.symmetric(horizontal:1, vertical:2),
-                 decoration: BoxDecoration(
-                        color: Colors.orange.shade100,
-                        borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.orange.shade300)
-                 ),
-                child: TextButton(
-                  onPressed: ()
-                  { 
-
-                     setState(() async {
-                     var isres =   await context.read<DataProvider>().updateKyc({
-                        "client_id":data[index]["client_id"],
-                        "kyc_completed":true
-                         });
-                         
-                         if(isres)
-                         {
-                        loadClientData();
-                         }
-                         
-                       
-                         
-                     });
-                      
-                  },
-                  child:Text("${data[index]["approver"]}"),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFE64A19), // Clean color for logout
+                foregroundColor: Colors.white, // Text color
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Text("Logout", style: TextStyle(fontWeight: FontWeight.bold)),
             ),
-            SizedBox(width: 5),
-            // Expanded(
-            //   flex: 2,
-            //   child: Container(
-            //      padding: EdgeInsets.symmetric(horizontal:1, vertical:2),
-            //      decoration: BoxDecoration(
-            //             color: Colors.orange.shade100,
-            //             borderRadius: BorderRadius.circular(20),
-            //   border: Border.all(color: Colors.orange.shade300)
-            //      ),
-            //     child: TextButton(
-            //       onPressed: ()
-            //       { 
-
-            //          setState(() async {
-            //          var isres =   await context.read<DataProvider>().updateKyc({
-            //             "client_id":data[index]["client_id"],
-            //             "kyc_completed":true
-            //              });
-                         
-            //              if(isres)
-            //              {
-            //             loadClientData();
-            //              }
-                         
-                       
-                         
-            //          });
-                      
-            //       },
-            //       child:Text("${data[index]["approver"]}"),
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(width:5),
-            // Expanded(
-            //   flex: 2,
-            //   child: Container(
-            //      padding: EdgeInsets.symmetric(horizontal:1, vertical:2),
-            //      decoration: BoxDecoration(
-            //             color: Colors.orange.shade100,
-            //             borderRadius: BorderRadius.circular(20),
-            //   border: Border.all(color: Colors.orange.shade300)
-            //      ),
-            //     child: TextButton(
-            //       onPressed: ()
-            //       { 
-
-            //          setState(() async {sendDataUser
-            //          var isres =   await context.read<DataProvider>().updateKyc({
-            //             "client_id":data[index]["client_id"],
-            //             "kyc_completed":true
-            //              });
-                         
-            //              if(isres)
-            //              {
-            //             loadClientData();
-            //              }
-                         
-                       
-                         
-            //          });
-                      
-            //       },
-            //       child:Text("${data[index]["approver"]}"),
-            //     ),
-            //   ),
-            // ),
-            
-          ],  
+          ],
         ),
-      );
-  
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Row
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Client ID",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Role: ${userRole ?? ''}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            // Data List
+            Expanded(
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "${data[index]["client_id"]}",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF00796B), // Simple Green Color
+                                foregroundColor: Colors.white, // Text color
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () async {
+                                var isRes = await context
+                                    .read<DataProvider>()
+                                    .userApproval({
+                                  "user": userRole,
+                                  "trade_id": data[index]["trade_id"],
+                                  "approval": "Approved",
+                                });
 
-      
-  
-  }),
-)
-,
-   
-  
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isRes
+                                          ? "Approval successful!"
+                                          : "Approval failed. Please try again.",
+                                    ),
+                                    backgroundColor:
+                                        isRes ? Colors.green : Colors.red,
+                                  ),
+                                );
 
-  ],
-),
+                                if (isRes) {
+                                  loadClientData();
+                                }
+                              },
+                              child: Text(
+                                "Approve",
+                                style: TextStyle(
+                                    color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }

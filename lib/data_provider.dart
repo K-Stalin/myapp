@@ -7,7 +7,7 @@ class DataProvider extends ChangeNotifier {
   
 
 
-  //------------------CLIENTSIDE API START-----------------------------------
+  //----------------------------CLIENTSIDE API START-----------------------------------
   String? _clientID;
   var _dataSet;
   // BankName API
@@ -70,11 +70,13 @@ class DataProvider extends ChangeNotifier {
       );
 
       var dataSet = json.decode(response.body);
-
+       
+       
       
       if (dataSet["status"] == "S") 
       {
-        _dataSet=dataSet[0];
+        
+        _dataSet=dataSet["resp"];
         notifyListeners();
         return true;
       } 
@@ -101,10 +103,101 @@ class DataProvider extends ChangeNotifier {
 
   getClientProfile() 
   {
+ 
     return _dataSet;
   }
 
+
+  getStocks() async
+  {
+     try {
+      final response = await http.get(
+        Uri.parse("http://192.168.2.34:29091/getStocks"),
+      );
+
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+
+        return decodedData is List ? decodedData : [decodedData];
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch data: $e');
+    }
+  }
+
+
+ buyStockAPI(data) async
+ {
+
+   try {
+      final response = await http.post(
+        Uri.parse("http://192.168.2.34:29091/buySell"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data),
+      );
+          
+      var dataset = json.decode(response.body);
+      
+      if (dataset["status"] == "S") 
+      {
+        return true;
+      } else
+      {
+        
+        return dataset["resp"];
+      }
+
+    } catch (e) {
+      print("ErrorName:::::::::::::: $e");
+    }
+
+ }
+
+
+
+getTradeAPI(data) async
+{
+ 
+ try {
+      final response = await http.get(
+        Uri.parse("http://192.168.2.34:29091/getTrade"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+           "CLIENTID":data
+        }
+      );
+
+      var dataset = json.decode(response.body);
+       
+       
+      if (dataset["status"] == "S") 
+      {
+        
+        return dataset["resp"];
+      } else
+      {
+        return false;
+        }
+
+    } catch (e) {
+      print("ErrorName:::::::::::::: $e");
+    }
+
+
+
+}
+
+
+
+
 //------------------CLIENTSIDE API END----------------------------------------
+
+
+
 
 
 
@@ -318,10 +411,14 @@ adminLoginAPI(data) async
   {
      return _adminProfile;
   }
+ 
+//------------------ADMIN API END-----------------------------------
 
+
+
+//------------------USERSIDE API START-----------------------------------
 
 List? dataUser;
-
 
 
 // Get TradeApproval
@@ -336,6 +433,7 @@ try {
         {
            "ROLE":role
         }
+        
       );
 
       var dataset = json.decode(response.body);
@@ -354,7 +452,30 @@ try {
       print("ErrorName:::::::::::::: $e");
     }
   }
+
+
+// UserApproval
+ userApproval(data) async {
+  try {
+
   
+    final response = await http.put(
+      Uri.parse("http://192.168.2.34:29091/userApproval"),
+      body: json.encode(data),
+    );
+
+     var dataset = json.decode(response.body);
+      print(dataset);
+    if (dataset["status"] == "S") {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+}
+
 
 
 sendDataUser()
@@ -364,13 +485,6 @@ sendDataUser()
 }
   
 
-
-
-
-
-//------------------ADMIN API END-----------------------------------
-
-
-
+//------------------USERSIDE API END-----------------------------------
 
 }
