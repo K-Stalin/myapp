@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,21 +6,25 @@ class DataProvider extends ChangeNotifier {
   
 
 
-  //----------------------------CLIENTSIDE API START-----------------------------------
+//----------------------------CLIENTSIDE API START------------------------------------------
   String? _clientID;
   var _dataSet;
+
   // BankName API
-  bankNameProviderAPI() async {
+  bankNameProviderAPI() async 
+  {
     try {
       final response = await http.get(
         Uri.parse("http://192.168.2.34:29091/getBankMaster"),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200) 
+      {
         final decodedData = jsonDecode(response.body);
 
         return decodedData is List ? decodedData : [decodedData];
-      } else {
+      } else 
+      {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
@@ -58,7 +61,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   
-
+// ClientLoginAPI
   clientLoginAPI(data) async {
     try {
       final response = await http.post(
@@ -108,6 +111,8 @@ class DataProvider extends ChangeNotifier {
   }
 
 
+
+// STOCKSAPI
   getStocks() async
   {
      try {
@@ -158,7 +163,7 @@ class DataProvider extends ChangeNotifier {
  }
 
 
-
+// TRADEAPI
 getTradeAPI(data) async
 {
  
@@ -194,7 +199,7 @@ getTradeAPI(data) async
 
 
 
-//------------------CLIENTSIDE API END----------------------------------------
+//------------------CLIENTSIDE API END-------------------------------------------
 
 
 
@@ -203,7 +208,7 @@ getTradeAPI(data) async
 
 
 
-//------------------ADMIN API START-----------------------------------
+//------------------ADMIN API START-----------------------------------------------
 
 var  _adminProfile;
 
@@ -320,7 +325,6 @@ adminLoginAPI(data) async
 
 
 // Client Approve
- 
   clientApprove(data) async
   {
       try {
@@ -351,7 +355,6 @@ adminLoginAPI(data) async
 
 
 // GetClientData
-
    getClientDataAPI() async
    {  
      try {
@@ -466,9 +469,12 @@ try {
 
      var dataset = json.decode(response.body);
       print(dataset);
-    if (dataset["status"] == "S") {
+    if (dataset["status"] == "S") 
+    {
+        notifyListeners();
       return true;
-    } else {
+    } else 
+    {
       return false;
     }
   } catch (e) {
@@ -484,7 +490,6 @@ sendDataUser()
   return dataUser;
 }
   
-
 //------------------USERSIDE API END-----------------------------------
 
 }

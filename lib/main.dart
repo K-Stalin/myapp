@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Trade App',
-      // home: HomePage(),
         home:HomePage(),
     );
   }

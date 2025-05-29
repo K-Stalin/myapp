@@ -7,10 +7,7 @@ class AddBankpage extends StatefulWidget {
 
   @override
   State<AddBankpage> createState() => _AddBankpageState();
-}  
-
- 
- 
+}
 
 class _AddBankpageState extends State<AddBankpage> {
   final _formKey = GlobalKey<FormState>();
@@ -113,8 +110,7 @@ class _AddBankpageState extends State<AddBankpage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Bank data added successfully!"),
-                              backgroundColor:
-                                  Colors.green, // Optional: Change color
+                              backgroundColor: Colors.green,
                             ),
                           );
 

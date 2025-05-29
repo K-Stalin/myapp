@@ -31,7 +31,7 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add EMployee")),
+      appBar: AppBar(title: Text("Add Employee")),
 
       body: Form(
         key: _formKey,
@@ -115,7 +115,7 @@ class _AddEmployeepageState extends State<AddEmployeepage> {
                         })) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Bank data added successfully!"),
+                              content: Text("Employee added successfully!"),
                               backgroundColor:
                                   Colors.green, // Optional: Change color
                             ),

@@ -114,7 +114,7 @@ class _AddStockspageState extends State<AddStockspage> {
                         })) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Bank data added successfully!"),
+                              content: Text("Stocks added successfully!"),
                               backgroundColor:
                                   Colors.green, // Optional: Change color
                             ),

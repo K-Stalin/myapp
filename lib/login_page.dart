@@ -6,7 +6,8 @@ import 'package:myapp/user/user_homePage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget 
+{
   const LoginPage({super.key});
 
   @override
@@ -16,10 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController loginId = TextEditingController(text: "FT00083");
-  TextEditingController loginPassword = TextEditingController(
-    text: "SURYA@123",
-  );
+  TextEditingController loginId = TextEditingController();
+  TextEditingController loginPassword = TextEditingController();
 
   bool wPassOrID = false;
 
@@ -231,12 +230,12 @@ class _LoginPageState extends State<LoginPage> {
                               break;
                             }
                           default:
-                            {
+                          {
                               setState(() 
                               {
                                 wPassOrID = true;
                               });
-                            }
+                          }
                         }
 
                         loginId.clear();

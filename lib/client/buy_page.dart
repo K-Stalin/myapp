@@ -15,44 +15,40 @@ class _BuyPageState extends State<BuyPage> {
   final TextEditingController _quantityController = TextEditingController();
   int _quantity = 0;
   List getTrade = [];
-  
-  double get _stockPrice => double.tryParse(widget.stock["stock_price"].toString()) ?? 0.0;
+
+  double get _stockPrice =>
+      double.tryParse(widget.stock["stock_price"].toString()) ?? 0.0;
   double get _total => _stockPrice * _quantity;
 
   @override
   void initState() {
     super.initState();
-   
   }
 
-  callData() async 
-  {
-      try
-      {
-         var dataSet = await context.read<DataProvider>().getTradeAPI(widget.client[0]["client_id"]);
-          getTrade= dataSet;
-          
+  callData() async {
+    try {
+      var dataSet = await context.read<DataProvider>().getTradeAPI(
+        widget.client[0]["client_id"],
+      );
+      getTrade = dataSet;
+
       print(widget.stock);
-      }
-      catch(e)
-      {
-          print("Error:::::::::::::::::::::::$e");
-      }
+    } catch (e) {
+      print("Error:::::::::::::::::::::::$e");
+    }
   }
 
-
-
-    _placeOrder() async {
+  _placeOrder() async {
     var res = await context.read<DataProvider>().buyStockAPI({
-      "client_id":widget.client[0]["client_id"],
+      "client_id": widget.client[0]["client_id"],
       "trade_type": "Buy",
-      "quantity":_quantity,
+      "quantity": _quantity,
       "trade_price": double.parse(_total.toStringAsFixed(2)),
       "stock_id": widget.stock["stock_id"],
       "backOfficer_approve": "pending",
       "biller_approve": "pending",
       "approver": "pending",
-      "kyc_completed":widget.client[0]["kyc_completed"]
+      "kyc_completed": widget.client[0]["kyc_completed"],
     });
 
     print(res);
@@ -69,7 +65,15 @@ class _BuyPageState extends State<BuyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buy Stock'),
+        title: Center(
+          child: Text(
+            'Buy Stock',
+            style: TextStyle(
+              color: Color(0XFF613DE4),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -80,7 +84,16 @@ class _BuyPageState extends State<BuyPage> {
               'Stock: ${widget.stock["stock_name"]}',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: Image.asset(
+                "LightTradeChart.png",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
+              ),
+            ),
+            SizedBox(height: 20),
             Text(
               'Price per share: ₹${widget.stock["stock_price"]}',
               style: const TextStyle(fontSize: 18, color: Colors.grey),
@@ -108,40 +121,40 @@ class _BuyPageState extends State<BuyPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _quantity > 0
-                    ? () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text('Confirm Order'),
-                            content: Text(
-                                'Buy $_quantity shares of ${widget.stock["stock_name"]} for ₹${_total.toStringAsFixed(2)}?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                  // Call the async function to place the order
-                                  await _placeOrder();
-                                },
-                                child: const Text('Confirm'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    : null,
+                onPressed:
+                    _quantity > 0
+                        ? () {
+                          showDialog(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  title: const Text('Confirm Order'),
+                                  content: Text(
+                                    'Buy $_quantity shares of ${widget.stock["stock_name"]} for ₹${_total.toStringAsFixed(2)}?',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.of(context).pop(),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await _placeOrder();
+                                      },
+                                      child: const Text('Confirm'),
+                                    ),
+                                  ],
+                                ),
+                          );
+                        }
+                        : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text(
-                  'Buy Now',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Buy Now', style: TextStyle(fontSize: 18,color: Colors.white)),
               ),
             ),
           ],

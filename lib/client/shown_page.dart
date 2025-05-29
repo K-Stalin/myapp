@@ -47,11 +47,9 @@ class _ShownPageState extends State<ShownPage> {
 
               child: TextButton(
                 onPressed: () {
-                  
                   setState(() {
-                    
-                     Navigator.pop(context);
-                     Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   });
                 },
                 child: Center(

@@ -11,9 +11,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  
   final _formKey = GlobalKey<FormState>();
 
+  // Controllers
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -23,6 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController bankAccount = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController balance = TextEditingController();
+  TextEditingController ifscCodeController = TextEditingController(); 
 
   var bankData;
   String? selectedBankId;
@@ -33,6 +34,23 @@ class _SignupPageState extends State<SignupPage> {
   void initState() {
     super.initState();
     dataCall();
+  }
+
+  @override
+  void dispose() {
+
+    // Dispose all controllers
+    firstName.dispose();
+    lastName.dispose();
+    email.dispose();
+    phone.dispose();
+    panCard.dispose();
+    nomineeName.dispose();
+    bankAccount.dispose();
+    password.dispose();
+    balance.dispose();
+    ifscCodeController.dispose(); 
+    super.dispose();
   }
 
   dataCall() async {
@@ -46,8 +64,8 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  String? validateRequired(String? value, String fieldName) 
-  {
+  // Validation functions
+  String? validateRequired(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
@@ -63,9 +81,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   String? validatePhone(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Phone is required';
-    }
+    if (value == null || value.isEmpty) return 'Phone is required';
     if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
       return 'Enter a valid 10-digit phone number';
     }
@@ -73,9 +89,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   String? validatePanCard(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'PAN Card is required';
-    }
+    if (value == null || value.isEmpty) return 'PAN Card is required';
     if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$').hasMatch(value)) {
       return 'Enter a valid PAN Card (e.g., ABCDE1234F)';
     }
@@ -84,9 +98,7 @@ class _SignupPageState extends State<SignupPage> {
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) return 'Password is required';
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters';
-    }
+    if (value.length < 8) return 'Password must be at least 8 characters';
     return null;
   }
 
@@ -94,7 +106,6 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      
       body: Form(
         key: _formKey,
         child: Container(
@@ -102,7 +113,6 @@ class _SignupPageState extends State<SignupPage> {
           child: ListView(
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // First Name
@@ -112,9 +122,7 @@ class _SignupPageState extends State<SignupPage> {
                     validator: (value) => validateRequired(value, 'First Name'),
                     decoration: InputDecoration(
                       hintText: "Enter your first name",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -126,9 +134,7 @@ class _SignupPageState extends State<SignupPage> {
                     validator: (value) => validateRequired(value, 'Last Name'),
                     decoration: InputDecoration(
                       hintText: "Enter your last name",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -141,9 +147,7 @@ class _SignupPageState extends State<SignupPage> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       hintText: "Enter your email",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -156,9 +160,7 @@ class _SignupPageState extends State<SignupPage> {
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: "Enter your phone number",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -170,9 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                     validator: validatePanCard,
                     decoration: InputDecoration(
                       hintText: "Enter your PAN Card",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -183,21 +183,18 @@ class _SignupPageState extends State<SignupPage> {
                     controller: nomineeName,
                     decoration: InputDecoration(
                       hintText: "Enter nominee name",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
 
-                  // Bank Name
+                  // Bank Name Dropdown
                   Text("Bank Name *"),
                   Container(
                     width: double.infinity,
                     child: DropdownButtonFormField<String>(
                       value: selectedBankId,
                       hint: Text("Select Bank"),
-                      icon: Icon(Icons.arrow_drop_down_circle_sharp),
                       items:
                           bankData?.map<DropdownMenuItem<String>>((bank) {
                             return DropdownMenuItem<String>(
@@ -208,19 +205,17 @@ class _SignupPageState extends State<SignupPage> {
                       validator:
                           (value) => value == null ? 'Bank is required' : null,
                       onChanged: (String? newValue) {
-                        setState(() 
-                        {
+                        setState(() {
                           selectedBankId = newValue;
-                          for (int i = 0; i < bankData.length; i++) 
-                          {
-                            if (bankData[i]["bank_id"].toString() ==
-                                selectedBankId.toString()) 
-                            {
-                              selectedIFSCcode = bankData[i]["ifsc_code"];
-                              print(selectedIFSCcode);
+                          
+                          for (var bank in bankData) {
+                            if (bank["bank_id"].toString() == selectedBankId) {
+                              selectedIFSCcode = bank["ifsc_code"];
+                              ifscCodeController.text =
+                                  selectedIFSCcode!; 
+                              break;
                             }
                           }
-
                           isToggelIFSC = true;
                         });
                       },
@@ -237,44 +232,44 @@ class _SignupPageState extends State<SignupPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintText: "Enter your bank account number",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
 
-                  // IFSC Code
+                  // IFSC Code (Updated)
                   if (isToggelIFSC)
-                  Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Text("Bank IFSC Code"),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-      children: [
-        Expanded(
-          child: TextFormField(
-            readOnly: true,
-            initialValue: selectedIFSCcode,
-          ),
-        ),
-        SizedBox(width: 8), 
-        CircleAvatar(
-          radius: 16, 
-          backgroundColor: Colors.green,
-          child: Icon(
-            Icons.check,
-            color: Colors.white,
-            size: 16, // Adjust size of the check icon
-          ),
-        ),
-      ],
-    ),
-    SizedBox(height: 10),
-  ],
-),
-
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Bank IFSC Code"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller:
+                                    ifscCodeController, 
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  hintText: "IFSC will auto-update",
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Colors.green,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
 
                   // Password
                   Text("Password *"),
@@ -284,9 +279,7 @@ class _SignupPageState extends State<SignupPage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: "Enter your password",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -299,51 +292,40 @@ class _SignupPageState extends State<SignupPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintText: "Enter initial balance",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
 
                   // Sign Up Button
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color(0XFF613DE4),
-                      borderRadius: BorderRadius.circular(8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0XFF613DE4),
+                      minimumSize: Size(double.infinity, 50),
                     ),
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<DataProvider>().clientRegisterAPI({
-                              "first_name": firstName.text,
-                              "last_name": lastName.text,
-                              "email": email.text,
-                              "phone_number": phone.text,
-                              "pancard": panCard.text,
-                              "nominee_name": nomineeName.text,
-                              "bank_id": int.parse(selectedBankId.toString()),
-                              "bank_account": bankAccount.text,
-                              "password": password.text,
-                              'balance': balance.text,
-                            });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ShownPage(),
-                              ),
-                            );
-                          }
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<DataProvider>().clientRegisterAPI({
+                          "first_name": firstName.text,
+                          "last_name": lastName.text,
+                          "email": email.text,
+                          "phone_number": phone.text,
+                          "pancard": panCard.text,
+                          "nominee_name": nomineeName.text,
+                          "bank_id": int.parse(selectedBankId.toString()),
+                          "bank_account": bankAccount.text,
+                          "password": password.text,
+                          'balance': balance.text,
                         });
-                      },
-                      child: Center(
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ShownPage()),
+                        );
+                      }
+                    },
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -351,7 +333,7 @@ class _SignupPageState extends State<SignupPage> {
             ],
           ),
         ),
-      ),
+     ),
     );
   }
 }
